@@ -1,57 +1,37 @@
 package com.ebac.modulo44.resttemplate;
 
-import com.ebac.modulo44.dto.ResponseWrapper;
 import com.ebac.modulo44.dto.Usuario;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
-
-@Slf4j
+@Service
 public class RestTemplateService {
 
-    private final RestTemplateClient restTemplateClient;
-    private final ObjectMapper objectMapper;
+    @Autowired
+    private RestTemplateClient client;
 
-    public RestTemplateService(RestTemplateClient restTemplateClient, ObjectMapper objectMapper) {
-        this.restTemplateClient = restTemplateClient;
-        this.objectMapper = objectMapper;
-    }
+    @Autowired
+    private ObjectMapper objectMapper;
 
-    public void getUsers() throws JsonProcessingException {
-        String users = restTemplateClient.getUsers();
+    public Usuario getUserById(Long id) {
+        ResponseEntity<String> response = client.getUserById(id);
 
-        ResponseWrapper<List<Usuario>> usuarios = objectMapper.readValue(users, new TypeReference<>() {});
-
-        if (usuarios.isSuccess()) {
-            log.info(usuarios.getMessage());
-            usuarios.getResponseEntity().getBody().forEach(System.out::println);
+        try {
+            return objectMapper.readValue(response.getBody(), Usuario.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Error parseando usuario");
         }
     }
 
-    public void getUserById(int id) throws JsonProcessingException {
-        String user = restTemplateClient.getUserById(id);
-
-        // Codigo faltante
-    }
-
-    public void createUser(Usuario usuario) {
-        String usuarioCreado = restTemplateClient.createUser(usuario);
-
-        // Completar para mapear a un objeto Usuario utilizando el objectMapper
-
-        log.info("Usuario creado: {}", usuarioCreado);
-    }
-
-    public void updateUser(Usuario usuario, long id) {
-        String usuarioActualizado = restTemplateClient.updateUserById(usuario, id);
-        log.info("Usuario actualizado: {}", usuarioActualizado);
-    }
-
-    public void deleteUser(long id) {
-        String usuarioEliminado = restTemplateClient.deleteUserById(id);
-        log.info("Usuario eliminado: {}", usuarioEliminado);
+    public Usuario createUser(Usuario usuario) {
+        try {
+            String json = objectMapper.writeValueAsString(usuario);
+            ResponseEntity<String> response = client.createUser(json);
+            return objectMapper.readValue(response.getBody(), Usuario.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Error creando usuario");
+        }
     }
 }

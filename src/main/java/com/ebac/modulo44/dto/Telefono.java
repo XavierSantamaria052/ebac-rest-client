@@ -1,12 +1,41 @@
 package com.ebac.modulo44.dto;
 
-import lombok.Data;
-
-@Data
 public class Telefono {
-    private int idTelefono;
-    private String tipoTelefono;
-    private int lada;
-    private String numero;
-    private Usuario usuario;
+
+    private Long id;
+    private String number;
+    private String cityCode;
+
+    public Telefono() {
+    }
+
+    public Telefono(Long id, String number, String cityCode) {
+        this.id = id;
+        this.number = number;
+        this.cityCode = cityCode;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
+    public String getCityCode() {
+        return cityCode;
+    }
+
+    public void setCityCode(String cityCode) {
+        this.cityCode = cityCode;
+    }
 }
