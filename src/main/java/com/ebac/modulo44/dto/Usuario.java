@@ -1,14 +1,20 @@
 package com.ebac.modulo44.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
-@Data
+import java.util.ArrayList;
+import java.util.List;
+
 @Builder
+@Data
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class Usuario {
-
-    private Long id;
+    private int idUsuario;
     private String nombre;
     private int edad;
-
+    private List<Telefono> telefonos = new ArrayList<>();
 }

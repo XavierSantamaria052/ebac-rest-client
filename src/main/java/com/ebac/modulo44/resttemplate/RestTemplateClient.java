@@ -1,32 +1,65 @@
 package com.ebac.modulo44.resttemplate;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.ebac.modulo44.dto.Usuario;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Component;
 
-@Component
+@Slf4j
 public class RestTemplateClient {
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
-    @Value("${api.base.url}")
-    private String baseUrl;
-
-    public ResponseEntity<String> getUserById(Long id) {
-        return restTemplate.getForEntity(baseUrl + "/users/" + id, String.class);
+    public RestTemplateClient(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
     }
 
-    public ResponseEntity<String> createUser(String json) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+    public String getUsers() {
+        String url = "http://localhost:8080/usuarios";
 
-        HttpEntity<String> request = new HttpEntity<>(json, headers);
-        return restTemplate.postForEntity(baseUrl + "/users", request, String.class);
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
+        if(!responseEntity.getStatusCode().equals(HttpStatus.OK)) {
+            log.error("Error al invocar la url {}", url);
+            return "";
+        }
+
+        return responseEntity.getBody();
+    }
+
+    public String getUserById(long id) {
+        String url = "http://localhost:8080/usuarios/" + id;
+
+        // Codigo faltante
+
+        return "";
+    }
+
+    public String createUser(Usuario usuario) {
+        String url = "http://localhost:8080/usuarios";
+
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, usuario, String.class);
+        if(!responseEntity.getStatusCode().equals(HttpStatus.OK)) {
+            log.error("Error al invocar la url {}", url);
+            return "";
+        }
+
+        return responseEntity.getBody();
+    }
+
+    public String updateUserById(Usuario usuario, long id) {
+        String url = "http://localhost:8080/usuarios/" + id;
+
+        restTemplate.put(url, usuario);
+
+        return "";
+    }
+
+    public String deleteUserById(long id) {
+        String url = "http://localhost:8080/usuarios/" + id;
+
+        restTemplate.delete(url);
+
+        return "";
     }
 }

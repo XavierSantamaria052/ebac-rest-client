@@ -1,23 +1,10 @@
 package com.ebac.modulo44.dto;
 
-import org.springframework.http.ResponseEntity;
+import lombok.Data;
 
+@Data
 public class ResponseWrapper<T> {
-
+    private boolean success;
+    private String message;
     private ResponseEntity<T> responseEntity;
-
-    public ResponseWrapper() {
-    }
-
-    public ResponseWrapper(ResponseEntity<T> responseEntity) {
-        this.responseEntity = responseEntity;
-    }
-
-    public ResponseEntity<T> getResponseEntity() {
-        return responseEntity;
-    }
-
-    public void setResponseEntity(ResponseEntity<T> responseEntity) {
-        this.responseEntity = responseEntity;
-    }
 }
