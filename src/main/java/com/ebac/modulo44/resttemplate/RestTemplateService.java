@@ -31,18 +31,23 @@ public class RestTemplateService {
         }
     }
 
-    public void getUserById(int id) throws JsonProcessingException {
+    public void getUserById(long id) throws JsonProcessingException {
         String user = restTemplateClient.getUserById(id);
 
-        // Codigo faltante
+        ResponseWrapper<Usuario> usuario = objectMapper.readValue(user, new TypeReference<>() {});
+
+        if (usuario.isSuccess()) {
+            log.info(usuario.getMessage());
+            System.out.println(usuario.getResponseEntity().getBody());
+        }
     }
 
-    public void createUser(Usuario usuario) {
+    public void createUser(Usuario usuario) throws JsonProcessingException {
         String usuarioCreado = restTemplateClient.createUser(usuario);
 
-        // Completar para mapear a un objeto Usuario utilizando el objectMapper
+        ResponseWrapper<Usuario> usuarioMapeado = objectMapper.readValue(usuarioCreado, new TypeReference<>() {});
 
-        log.info("Usuario creado: {}", usuarioCreado);
+        log.info("Usuario creado: {}", usuarioMapeado.getResponseEntity().getBody());
     }
 
     public void updateUser(Usuario usuario, long id) {
