@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface FeignApiClient {
 
-    // ========== USUARIOS ==========
+    // USUARIOS
 
     @RequestLine("GET /usuarios")
     ResponseWrapper<List<Usuario>> getUsers();
@@ -30,7 +30,7 @@ public interface FeignApiClient {
     @RequestLine("DELETE /usuarios/{id}")
     void deleteUser(@Param("id") int id);
 
-    // ========== TELEFONOS ==========
+    //TELEFONOS
 
     @RequestLine("GET /telefonos")
     ResponseWrapper<List<Telefono>> getTelefonos();

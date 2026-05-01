@@ -28,11 +28,13 @@ public class RestTemplateClient {
     }
 
     public String getUserById(long id) {
-        String url = "http://localhost:8080/usuarios/" + id;
-
-        // Codigo faltante
-
+    String url = "http://localhost:8080/usuarios/" + id;
+    ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
+    if(!responseEntity.getStatusCode().equals(HttpStatus.OK)) {
+        log.error("Error al invocar la url {}", url);
         return "";
+    }
+    return responseEntity.getBody();
     }
 
     public String createUser(Usuario usuario) {
